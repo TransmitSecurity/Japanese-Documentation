@@ -338,6 +338,8 @@ SAMPLE=password-authentication-drs yarn start
 
   <img src="../images/ciam-vanilla-password-authentication-drs-03-portal03.png" width="400"/>
 
+  `Custom actionsに入力する文字列は、小文字で指定してください` 
+
 - 追加が完了した結果が画面に表示されます
 
 ### カスタムAction Typeの表示
@@ -346,7 +348,7 @@ SAMPLE=password-authentication-drs yarn start
 
   ```
   <p>
-    <button class="btn" style="margin:5px;" onclick="reportAction('CustomLogin')">CustomLogin</button>
+    <button class="btn" style="margin:5px;" onclick="reportAction('customlogin')">customlogin</button>
   </p>
   ```
 
