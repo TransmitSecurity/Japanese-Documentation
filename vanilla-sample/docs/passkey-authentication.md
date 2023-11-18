@@ -44,9 +44,10 @@ SAMPLE=passkey-authentication yarn start
 
 > [!NOTE]
 > 本手順はGoogle Chromeで操作をしています。Google ChromeはデフォルトでGoogle ChromeのKeychainにPasskeyを登録します。ChromeではiCloud Keychainに登録することも可能です。そちらを希望する場合には、`User a different passkey`をクリックし、`iCloud Keychain`を選択してください
->   <img src="../images/ciam-vanilla-passkey-auth-01-keychain-select01.png" width="200"/>
+> 
+> <p><img src="../images/ciam-vanilla-passkey-auth-01-keychain-select01.png" width="200"/></p>
 
-- 対象のサイトにPasskeyの登録を行うため、ユーザ認証を行います。テストを行なっているMACにはTouchIDがあるため、それを用いて認証します
+- 対象のサイトに紐づくPasskeyの登録を行うため、ユーザ認証を行います。テストを行なっているMACにはTouchIDがあるため、それを用いて認証します
 
   <p><img src="../images/ciam-vanilla-passkey-auth-01-app04.png" width="200"/></p>
 
@@ -87,7 +88,7 @@ SAMPLE=passkey-authentication yarn start
 
   <p><img src="../images/ciam-vanilla-passkey-auth-01-another-device05.png" width="200"/></p>
 
-- 端末でログイン操作が完了すると、アプケーションログインが完了すると、アプリケーションがログイン完了となります
+- 端末でログイン操作が完了すると、アプリケーションがログイン完了となります
 
 ### 参考: Chrome Passkey 管理画面
 
