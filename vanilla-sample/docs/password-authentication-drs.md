@@ -235,6 +235,7 @@ SAMPLE=password-authentication-drs yarn start
 - [triggerActionEvent](https://developer.transmitsecurity.com/sdk-ref/platform/modules/drs/#triggeractionevent)のパラメータ(`ActiveEventOptions`)は以下の用途で利用が可能です
   - `correlationId`: IDに関連する情報を付与することが可能です。例えば特定のtransactionが特定のキャンペーンに該当する場合、キャンペーンIDを付与するなどの用途に適しています
   - `claimedUserId`: Detection and Response Serviceではユーザログイン後の情報は`tsPlatform.drs.setAuthenticatedUser()`でUserIDを記録し適切に管理することが求められます。認証処理が完了する前のユーザの操作に対し、Detection and Response Serviceのログの解析などを適切に行うため別の値にユーザIDを指定します
+  - `transactionData`: Transactionを識別する情報を指定します
 
 - 初期状態のアプリケーションにコードを追記した例を示します
 
@@ -252,38 +253,72 @@ SAMPLE=password-authentication-drs yarn start
 `</head>`上の`</script>`の直前に以下を追加してください。
 
   ```javascript
-      // report Action with correlationId,claimedUserId
-      async function reportActionWithOption(actionType) {
-        //var inputCorrelationId = ""// document.getElementById("setcorrelationid").value? b : c 
-        //var inputClaimedUserId = ""// document.getElementById("setclaimeduserid").value? b : c 
-        console.log("actionType:"+actionType+",correlationId:"+document.getElementById("setcorrelationid").value+",claimedUserId:"+document.getElementById("setclaimeduserid").value )
-        window.myTSAccountProtection.triggerActionEvent(
-          actionType, 
-          {
-            correlationId: inputCorrelationId,
-            claimedUserId: inputClaimedUserId
-          }).then((actionResponse) => {
-            let actionToken = actionResponse.actionToken;
-            console.log('Action Token', actionToken);
-        });
+    // report Action with actionEventOptions
+    async function reportActionWithOption(actionType) {
+      var inputTransactionData = {
+        "amount": document.getElementById("tdataamount").value, 
+        "currency": document.getElementById("tdatacurrency").value,  
+        "reason":  document.getElementById("tdatareason").value, 
+        "transactionDate":  document.getElementById("tdatadate").value, 
+        "payer": {
+          "name":  document.getElementById("tdatapayername").value, 
+          "branchIdentifier":  document.getElementById("tdatapayerbranchid").value, 
+          "accountNumber":  document.getElementById("tdatapayeraccno").value
+        },
+        "payee": {
+          "name":  document.getElementById("tdatapayeename").value, 
+          "bankIdentifier":  document.getElementById("tdatapayeeid").value, 
+          "branchIdentifier":  document.getElementById("tdatapayeebranchid").value, 
+          "accountNumber":  document.getElementById("tdatapayeeaccno").value 
+        }
+      } 
+
+      var actionOption =  {
+          correlationId: document.getElementById("setcorrelationid").value, 
+          claimedUserId: document.getElementById("setclaimeduserid").value,
+          transactionData: inputTransactionData
       }
+
+      console.log("actionType:"+actionType)
+      console.log("option:", actionOption)
+
+      window.myTSAccountProtection.triggerActionEvent(
+        actionType,
+        actionOption
+        ).then((actionResponse) => {
+          let actionToken = actionResponse.actionToken;
+          console.log('Action Token', actionToken);
+      });
+
+    }
   ```
 - HTML main 内に先ほど追加した関数を実行するHTMLを追加します。
 `</main>`上の`</div>`の上に以下を追加してください
 
   ```html
-  <!-- ReportAction with correlationId claimedUserId -->
+  <!-- ReportAction with Action Event Options -->
   <p>
-    <h4>ReportAction with correlationId claimedUserId</h3>
-    <input type="text" id="setcorrelationid" class="textbox" style="width:100%;" placeholder="Set Campaign ID" />
-    <button class="full-width" onclick="reportActionWithOption('register')">Set UserId</button>
-    <input type="text" id="setclaimeduserid" class="textbox" style="width:100%;" placeholder="Set Pre UserID"  />
-    <button class="full-width" onclick="reportActionWithOption('transaction')">Clear UserId</button>
+    <h4>Correlation ID</h4>
+    <input type="text" id="setcorrelationid" class="textbox" style="width:100%;" value="CP111111" placeholder="Set Correlation ID" />
+    <h4>Claimed UserID</h4>
+    <input type="text" id="setclaimeduserid" class="textbox" style="width:100%;" value="AABBCCDD" placeholder="Set Claimed UserID"  />
+    <h4>Transaction Data</h4>
+    <input type="text" id="tdataamount" class="textbox" style="width:100%;" value="120" placeholder="Set Amount"  />
+    <input type="text" id="tdatacurrency" class="textbox" style="width:100%;" value="USD" placeholder="Set Currency"  />
+    <input type="text" id="tdatareason" class="textbox" style="width:100%;" value="pyament" placeholder="Set Reason"  />
+    <input type="text" id="tdatadate" class="textbox" style="width:100%;" value="1672498800" placeholder="Set Date"  />
+    <input type="text" id="tdatapayername" class="textbox" style="width:100%;" value="A Corp" placeholder="Set Payer Name"  />
+    <input type="text" id="tdatapayerbranchid" class="textbox" style="width:100%;" value="br111111" placeholder="Set Payer Branch ID"  />
+    <input type="text" id="tdatapayeraccno" class="textbox" style="width:100%;" value="111111111" placeholder="Set Payer Account No"  />
+    <input type="text" id="tdatapayeename" class="textbox" style="width:100%;" value="B Corp" placeholder="Set Payee Name"  />
+    <input type="text" id="tdatapayeeid" class="textbox" style="width:100%;" value="bk222222" placeholder="Set Payee Bank ID"  />
+    <input type="text" id="tdatapayeebranchid" class="textbox" style="width:100%;" value="br222222" placeholder="Set Payee Branch ID"  />
+    <input type="text" id="tdatapayeeaccno" class="textbox" style="width:100%;" value="22222222" placeholder="Set Payee Account No"  />
+    <button class="full-width" onclick="reportActionWithOption('transaction')">Send Transaction with Options</button>
   </p>
- 
   ```
 
-- 変更内容を保存します。アプリケーションを起動し、再度アクセスしてください
+- 変更内容を保存します。アプリケーションを起動し、再度アクセスしてください。HTMLに追加したButtonをクリックすると、RecommendationsにOptiionパラメータを指定したイベントが記録されます
 
 ### 動作確認
 
