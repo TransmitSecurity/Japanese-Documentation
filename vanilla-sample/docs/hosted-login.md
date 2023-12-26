@@ -25,7 +25,7 @@
 
 ### ファイルのコピー
 
-```
+```shell
 cp -r ~/ciam-expressjs-vanilla-samples/password-authentication ~/ciam-expressjs-vanilla-samples/hosted-login
 cd ~/ciam-expressjs-vanilla-samples/
 ```
@@ -35,7 +35,7 @@ cd ~/ciam-expressjs-vanilla-samples/
 - HTMLファイルの修正。`hosted-login/pages`配下の`login.html`を修正してください
 
 
-```
+```shell
 ## * vi がない場合
 ## apt update && apt install vim -y
 vim ~/ciam-expressjs-vanilla-samples/hosted-login/pages/login.html
@@ -43,7 +43,7 @@ vim ~/ciam-expressjs-vanilla-samples/hosted-login/pages/login.html
 
 - script タグ内にJavaScriptの関数を追加します。 </head>上の</script>の直前に以下を追加してください。
 
-```html
+```javascript
       async function hostedlogin() {
         // We create a claim to get the username in the ID Token
         const claims = JSON.stringify({
@@ -86,7 +86,7 @@ vim ~/ciam-expressjs-vanilla-samples/hosted-login/pages/login.html
 
 - `.envファイル`の修正
 
-```
+```shell
 ## * vi がない場合
 ## apt update && apt install vim -y
 vim ~/ciam-expressjs-vanilla-samples/.env
@@ -94,14 +94,15 @@ vim ~/ciam-expressjs-vanilla-samples/.env
 
 - 以下の内容を参考に変数を追加してください。ドメイン、ポートの内容は実行するサンプルアプリケーションを実行する環境に合わせて修正してください
 
-```
+```shell
 ## 末尾にVITE_TS_REDIRECT_URIを追加
 ## TS_REDIRECT_URIの内容をコピーし、変数名の先頭に`VITE_`を付与すれば良い
 VITE_TS_REDIRECT_URI=http://localhost:8080/complete
 ```
 
 ## サンプルアプリケーションの実行
-```
+
+```shell
 ## cd ~/ciam-expressjs-vanilla-samples/
 SAMPLE=hosted-login yarn start
 ```
@@ -125,15 +126,14 @@ SAMPLE=hosted-login yarn start
 
 - `Email`欄に有効なEメールアドレスを入力してください
 
-- 作成するアカウントの`username`、`passsword`を入力し、`Sign up`をクリックしてください
-
   <img src="../images/ciam-vanilla-hosted-login-01-app03.png" width="400"/>
 
 - 入力したメールアドレスに対し、OTPが送付されます。有効なメールアドレスの内容を確認し、画面に入力します
 
+  <p><img src="../images/ciam-vanilla-hosted-login-01-mail01.png" width="400"/></p>
+
   <p><img src="../images/ciam-vanilla-hosted-login-01-app04.png" width="400"/></p>
 
-  <p><img src="../images/ciam-vanilla-hosted-login-01-mail01.png" width="400"/></p>
 
 - 正しくOTPが入力できると、Passkeyの登録メニューが表示されます。`Register passkey`をクリックします
 
@@ -208,7 +208,8 @@ SAMPLE=hosted-login yarn start
 
     <p><img src="../images/ciam-vanilla-hosted-login-02-app04.png" width="400"/></p>
 
-- アプリケーション下部の`Hosted Login`をクリックしてます。日本語(機械翻訳)の表示、また指定した色のデザインとなります。以下に参考の画面を示します
+- 動作を確認します。アプリケーション下部の`Hosted Login`をクリックします。
+  - ブラウザが日本語表示の場合、日本語(機械翻訳)でメッセージが表示されます。また指定した色のデザインとなります。以下に参考の画面を示します
 
     <p><img src="../images/ciam-vanilla-hosted-login-02-app05.png" width="400"/></p>
 
