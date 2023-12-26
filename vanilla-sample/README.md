@@ -38,10 +38,14 @@
   - [Email Magiclink Authentication](./docs/login-with-magiclink.md)
   - [SMS OTP Authentication](./docs/login-with-sms.md)
 
+  - [Hosted Login](./docs/hosted-login.md)
+
 - Backend Authentication
   - [Backend Email OTP Authentication](./docs/login-with-be-email.md)
   - [Backend Email Magiclink Authentication](./docs/login-with-be-magiclink.md)
   - [Backend SMS OTP Authentication](./docs/login-with-be-sms.md)
+
+  - [Passkey Authentication](./docs/passkey-authentication.md)
 
 - IDV
   - [Hosted IDV(ID Verification)](./docs/hosted-idv.md)
