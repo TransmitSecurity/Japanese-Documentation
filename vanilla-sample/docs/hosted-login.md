@@ -97,7 +97,7 @@ sequenceDiagram
   Client->>User: 22. home.htmlを表示
 ```
 
-- 17. アカウントの登録で登録したPasskeyの利用が可能となります。リストより選択しログイン処理を行います
+- 17.アカウントの登録で登録したPasskeyの利用が可能となります。リストより選択しログイン処理を行います
 
 ### 利用するTransmit SecurityのAPI
 
