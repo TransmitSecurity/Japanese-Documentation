@@ -860,6 +860,77 @@ SAMPLE=password-authentication-drs yarn start
   ]
 }
 ```
+
+## SDKの接続をローカルでProxyしTransmitSecurityに転送する構成
+
+- 本番アプリケーションでご利用いただく場合には以下の構成を参考にデプロイすることを推奨しております
+
+  <p><img src="../images/ciam-vanilla-password-authentication-drs-07-diagram01.png" width="400"/></p>
+
+- 構成2、構成3ではお客様環境で通信を受け付けた後、Proxyなどにより転送する構成を想定しています
+- こちらの要件を満たすサンプルの記述は以下の通りです
+
+### JSファイルの修正
+
+- `password-authentication-drs/pages`配下の`init.js`を修正してください
+  - サンプルの動作環境での修正方法は以下です
+  
+  ```shell
+  ## * vi がない場合
+  ## apt update && apt install vim -y
+  vi ~/ciam-expressjs-vanilla-samples/password-authentication-drs/pages/init.js
+  ```
+
+  - `TSAccountProtection`のオプションパラメータとして`serverPath`を追加します。本サンプルの転送先は[参考：NGINXを用いた通信のProxy]()で動作するNGINXを宛先として指定しています
+
+  ```javascript
+  // document.addEventListener('TSAccountProtectionReady', function () {　内の内容を変更
+
+    //window.myTSAccountProtection = new window.TSAccountProtection(window.env.VITE_TS_CLIENT_ID);
+    window.myTSAccountProtection = new window.TSAccountProtection(window.env.VITE_TS_CLIENT_ID,
+                        {serverPath: "http://localhost" });
+  ```
+
+- 変更後の内容でアプリケーションを実行することで、画面操作に応じたRecommendationが記録されます
+
+### 参考：NGINXを用いた通信のProxy
+
+- ProxyサーバのサンプルとしてNGINXのコンフィグ、および実行方法を示します
+
+- 以下コマンドで設定ファイルを作成します
+
+  ```shell
+  mkdir ~/nginxconfig
+  vi ~/nginxconfig/default.conf
+  ```
+
+- `default.conf`の内容として以下をペーストします
+
+  ```shell
+  log_format log_drs '$remote_addr - $remote_user [$time_local] '
+                      '"$request" $status $body_bytes_sent '
+                      '"$http_referer" "$proxy_host:$proxy_port"';
+  server {
+    listen 80;
+    location / {
+      proxy_pass https://collect.riskid.security/;
+      access_log /var/log/nginx/access.log log_drs;
+    }
+  }
+  ```
+
+- 以下のDockerコマンドでNGINXのコンテナを実行します
+
+  ```shell
+  docker run --platform linux/amd64 -p 80:80 -v ~/nginxconfig:/etc/nginx/conf.d nginx
+  ```
+
+- `serverPath`パラメータで指定した宛先の通信をNGINXが受信し、正しく転送した場合以下のようなログがターミナルに記録されます
+
+  ```shell
+  172.17.0.1 - - [09/Jan/2024:11:06:24 +0000] "POST /device/events HTTP/1.1" 201 220 "http://localhost:8080/" "collect.riskid.security:443"
+  ```
+
 <!--
 ## デバッグ
 -->
