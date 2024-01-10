@@ -881,7 +881,7 @@ SAMPLE=password-authentication-drs yarn start
   vi ~/ciam-expressjs-vanilla-samples/password-authentication-drs/pages/init.js
   ```
 
-  - `TSAccountProtection`のオプションパラメータとして`serverPath`を追加します。本サンプルの転送先は[参考：NGINXを用いた通信のProxy]()で動作するNGINXを宛先として指定しています
+  - `TSAccountProtection`のオプションパラメータとして`serverPath`を追加します。本サンプルの転送先は[参考：NGINXを用いた通信のProxy](./password-authentication-drs.md#参考nginxを用いた通信のproxy)で動作するNGINXを宛先として指定しています
 
   ```javascript
   // document.addEventListener('TSAccountProtectionReady', function () {　内の内容を変更
