@@ -318,7 +318,7 @@ SAMPLE=password-authentication-drs yarn start
   </p>
   ```
 
-- 変更内容を保存します。アプリケーションを起動し、再度アクセスしてください。HTMLに追加したButtonをクリックすると、RecommendationsにOptiionパラメータを指定したイベントが記録されます
+- 変更内容を保存します。アプリケーションを起動し、再度アクセスしてください。HTMLに追加したButtonをクリックすると、RecommendationsにOptionパラメータを指定したイベントが記録されます
 
 ### 動作確認
 
@@ -328,28 +328,123 @@ SAMPLE=password-authentication-drs yarn start
 
 - ログイン後の画面に先程修正した情報が反映されていることが確認できます
 
-- 画面に表示された機能について紹介します
-  - Set / Unset User ID
-    - UserID のセット・解除ができます
-    - UserIDのセット: セットしたいUserIDを`Set Username`に記載し、`Set UseId`をクリック
-    - UserIDの解除: `Unset UserId`をクリック
-  - Report Action Button
-    - Detection and Response Serviceではユーザの操作を示すために、Action Typeを利用することが可能です
-    - Action Typeはプリセットと、管理者が定義するCustomがあります。プリセットの内容は[Action Types](https://developer.transmitsecurity.com/guides/risk/recommendations/)を参照してください
+  <p><img src="../images/ciam-vanilla-password-authentication-drs-08-app01.png" width="400"/></p>
 
-- `Set Username`に`test01`(適当なユーザIDを示す文字列)を入力し、`Set UserId`をクリックします
-
-  <img src="../images/ciam-vanilla-password-authentication-drs-02-app01.png" width="400"/>
-
-- その後、Action Buttonの`register`と`transaction`をクリックします
-
-  <img src="../images/ciam-vanilla-password-authentication-drs-02-app02.png" width="400"/>
+- テキストボックスに適宜希望する値に修正し、その後、最下部の`Send Transaction with Options`をクリックします
 
 - Portalの左のメニューの`Detection and Response` >  `Recommendations`を開きます
-  - `Authenticated`の内容を確認すると、UserIDがセットされていることが確認できます
-  - `Register`、`Transaction`を確認すると、先程セットしたUserIDが記録されていることが確認できます
+  - 該当の`Transaction`の`Raw Data`を確認すると、先程セットしたオプションの値が記録されていることが確認できます
 
-  <img src="../images/ciam-vanilla-password-authentication-drs-02-portal01.png" width="400"/>
+  ```json
+  {
+    "recommendation": {
+      "type": "CHALLENGE"
+    },
+    "risk_score": "81.9",
+    "context": {
+      "action_id": "f2d0739544dd4dc5fdca87fdcd5053586b4f44592ff7ff9504e0926000eff03f",
+      "action_type": "transaction",
+      "action_performed_at": "1696779797598",
+      "client_id": "*****************",
+      "application_id": "1mc6icg3ue3fibdin5rqe",
+      "tenant_id": "iqhfdlmy13gcc9plu4zq5",
+      "device_id": "2E7D5EC91a2Ecb01AFeFD196DcdA3D",
+      "correlation_id": "CP111111",
+      "campaign_id": null,
+      "device_fingerprint": "832133b7867d1e7bde3b6beb5c7230a0816f3ad231e2656b28c4f78c01ebc1bb",
+      "user_id": null,
+      "claimed_user_id": "AABBCCDD",
+      "location": "http://localhost:8080/pages/home.html",
+      "ip": "35.227.67.178",
+      "ip_country": "US",
+      "ip_region": "South Carolina",
+      "ip_location_city": "North Charleston",
+      "ip_location_zip": "29415",
+      "ip_location_longitude": "-79.97481",
+      "ip_location_latitude": "32.85462",
+      "ip_asn_name": "Google LLC",
+      "ip_asn_id": "AS396982",
+      "ip_organization_name": "Google LLC",
+      "ip_organization_type": "hosting",
+      "ip_location_timezone": "America/New_York",
+      "device_timezone": "Asia/Tokyo",
+      "device_languages": [
+        "en-US",
+        "en",
+        "ja"
+      ],
+      "device_platform": "desktop",
+      "os_name": "Mac OS",
+      "os_version": "14.2.1",
+      "browser_name": "Chrome",
+      "browser_version": "120.0.6099.234",
+      "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      "sdk_version": "1.41.13",
+      "app_version": null
+    },
+    "risk_signals": {
+      "device": {
+        "ram": "8192",
+        "total_storage": null,
+        "available_storage": null,
+        "battery_level": "1",
+        "core_number": "10",
+        "graphic_card": null,
+        "model": "Macintosh",
+        "screen_height": 982,
+        "screen_width": 1512,
+        "incognito": false,
+        "tampered": null,
+        "emulated": null,
+        "spoofed": false,
+        "tz_mismatch": false
+      },
+      "network": {
+        "vpn": false,
+        "tor": false,
+        "proxy": false,
+        "anonymizer": false
+      },
+      "behavior": {
+        "typing_velocity": "0.9377455038263146",
+        "input_method": [
+          "is_paste",
+          "is_typing"
+        ],
+        "no_user_interaction": false
+      },
+      "history": {
+        "ip_action_rate_60_sec": 1,
+        "user_action_rate_60_sec": null,
+        "device_action_rate_60_sec": 2,
+        "ip_user_count_last_hour": 2,
+        "linking_user_to_device_count": 1,
+        "linking_device_to_users_count": 41,
+        "ip_device_count_last_hour": 1
+      }
+    },
+    "transaction_data": {
+      "amount": 120,
+      "currency": "USD",
+      "reason": "pyament",
+      "transactionDate": 1672498800,
+      "payer": {
+        "name": "A Corp",
+        "branchIdentifier": "br111111",
+        "accountNumber": "111111111"
+      },
+      "payee": {
+        "name": "B Corp",
+        "bankIdentifier": "bk222222",
+        "branchIdentifier": "br222222"
+      }
+    },
+    "reasons": [
+      "DEVICE_ORIGIN_ANOMALY",
+      "DEVICE_PROFILE_VELOCITY"
+    ]
+  }
+  ```
 
 
 ## カスタムAction Type
