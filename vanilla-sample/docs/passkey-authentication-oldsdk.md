@@ -19,7 +19,7 @@ sequenceDiagram
     participant Transmit Security
 
     User->>Client: 1. Root(/)へ接続
-    Client->>Backend:
+    Client->>Backend:  
     Backend->>Client: /pages/login.html へHTTP Redirect
 
     opt Passkeyの登録
@@ -33,7 +33,7 @@ sequenceDiagram
       Transmit Security->>Backend: 新規作成結果(AuthSession ID)を応答
       Backend->>Client: 新規作成結果(AuthSession ID)を応答
       Client->>SDK: 7.Registration Challengeの取得
-      SDK->>Client:
+      SDK->>Client: 
       Client->>SDK: 8.WebAuthn credential(Passkey)の登録
       SDK->>Client: authorization codeを応答
     end
@@ -62,18 +62,18 @@ sequenceDiagram
   participant Transmit Security
 
   User->>Client: 11. Root(/)へ接続
-  Client->>Backend:
+  Client->>Backend: 
   Backend->>Client: /pages/login.html へHTTP Redirect
 
   opt Passkeyを使ったログイン
     Client->>SDK: 12. SDKの初期化
-    SDK->>Client:
+    SDK->>Client: 
     Client->>SDK: 13.Passkey WebAuthn Authentication Challengeの取得
-    SDK->>Client:
+    SDK->>Client: 
     Client->>SDK: 14.Passkey WebAuthn認証の実行
     Client->>User: 15.Username欄にautofilでPasskey(credential)のリストを表示
     User->>Client: 16.リストより利用するPasskey(credential)を選択し、ユーザー認証を実施
-    Client->>SDK:
+    Client->>SDK: 
     SDK->>Client: 17.Authorization Codeを応答
   end
 
