@@ -5,10 +5,138 @@
 - [passkey-authentication](https://github.com/TransmitSecurity/ciam-expressjs-vanilla-samples/tree/main/passkey-authentication)
 - このサンプルアプリケーションはパスキーを利用した認証を確認することができます
 
+
+## 処理フロー
+
+### パスキーの登録
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Client as Client (Browser)
+    participant SDK as WebAuthnSDK
+    participant Backend
+    participant Transmit Security
+
+    User->>Client: 1. Root(/)へ接続
+    Client->>Backend:  
+    Backend->>Client: /pages/login.html へHTTP Redirect
+
+    opt Passkeyの登録
+      User->>Client: 2. Passkey登録のため Sign up をクリック
+      Client->>Client: /pages/register.html を開く
+      User->>Client: 3. Passkeyを登録するユーザ名を入力し、Registryボタンをクリック
+      Client->>SDK: 4. WebAuthn credential(パスキー)の登録 
+      SDK->>Client: 新規作成結果(WebAuthn Result)を応答
+      Client->>Backend: 5. 新規作成結果の通知(/registration)
+      Backend->>Transmit Security: 6. ユーザーの登録(External User)
+      Transmit Security->>Backend: 
+    end
+
+    Client->>Client: 7.Root(/)へ接続
+    Client->>Backend: Root(/)へHTTPリクエスト (GET /)
+    Backend->>Client: /pages/login.htmlへHTTP Redirect
+```
+
+- 1./pages/login.html を開くと、パスキーでログインするためのスクリプトが動作します。本フローは パスキーの登録を説明するためこちらの動作を省略しています
+- 4.パスキーの登録を行います
+- 5.パスキーの登録結果をバックエンド(/registration)へ通知します
+- 6.パスキーの登録結果を用いてExternal Userとしてユーザーを登録します
+
+### パスキーを使ったログイン
+
+- [パスキーの登録](./passkey-authentication.md#Passkeyの登録)で登録したパスキーを用いてログインします
+- こちらのサンプルアプリケーションでは、2種類のログイン方法を確認できます。該当する操作のフローを確認してください
+  - A. Autofillによるログイン
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant Client as Client (Browser)
+  participant SDK as WebAuthnSDK
+  participant Backend
+  participant Transmit Security
+
+  User->>Client: 8. Root(/)へ接続
+  Client->>Backend: 
+  Backend->>Client: /pages/login.html へHTTP Redirect
+
+  opt 入力したユーザーのパスキーを使ったログイン
+    Client->>SDK: 9. SDKの初期化 (画面読み込み時に自動的に実行される)
+    SDK->>Client: 
+    Client->>SDK: 10.WebAuthnをサポートするプラットフォームであるか確認 (画面読み込み時に自動的に実行される)
+    SDK->>Client: 
+    Client->>SDK: A1.Passkey autofillを有効化 (画面読み込み時に自動的に実行される)
+    Client->>User: A2.Username欄をクリックし、パスキー(credential)のリストを表示
+    User->>Client: A3.リストより利用するパスキー(credential)を選択
+    Client->>SDK: A4.パスキーによるユーザー認証を実施
+    SDK->>Client: A5.WebAuthn Resultを応答
+  end
+
+  Client->>Backend: 11.WebAuthn Resultを応答 (/authenticate)
+  Backend->>Transmit Security: 12.WebAuthn 認証結果の取得(POST /auth/webauthn/authenticate)
+  Client->>Client: 13.Root(/)へ接続
+  Client->>Backend: Root(/)へHTTPリクエスト (GET /)
+  Backend->>Client: セッション情報(ID Token)があるため/pages/home.htmlへHTTP Redirect
+```
+ 
+  - B. 入力したユーザーのパスキーを使ったログイン
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant Client as Client (Browser)
+  participant SDK as WebAuthnSDK
+  participant Backend
+  participant Transmit Security
+
+  User->>Client: 8. Root(/)へ接続
+  Client->>Backend: 
+  Backend->>Client: /pages/login.html へHTTP Redirect
+
+  opt 入力したユーザーのパスキーを使ったログイン
+    Client->>SDK: 9. SDKの初期化 (画面読み込み時に自動的に実行される)
+    SDK->>Client: 
+    Client->>SDK: 10.WebAuthnをサポートするプラットフォームであるか確認 (画面読み込み時に自動的に実行される)
+    SDK->>Client: 
+    Client->>SDK: A1.パスキー autofillを有効化 (画面読み込み時に自動的に実行される)
+    User->>Client: B1.ユーザー名を入力し、Loginボタンをクリック
+    Client->>SDK: B2.パスキー autofillの無効化 (自動的に実行されるため、B3.ユーザー認証を実行するためにautofillを無効化)
+    Client->>SDK: B3.パスキーによるユーザー認証を実施
+    SDK->>Client: B4.WebAuthn Resultを応答
+  end
+
+  Client->>Backend: 11.WebAuthn Resultを応答 (/authenticate)
+  Backend->>Transmit Security: 12.WebAuthn 認証結果の取得(POST /auth/webauthn/authenticate)
+  Client->>Client: 13.Root(/)へ接続
+  Client->>Backend: Root(/)へHTTPリクエスト (GET /)
+  Backend->>Client: セッション情報(ID Token)があるため/pages/home.htmlへHTTP Redirect
+```
+
+
+- 9.パスキーの認証を実行するため、初期化を行います。初期化の際に、Transmit Security Platform にあらかじめ登録したどのクライアントであるかを示す、ClientID を指定しています
+- A1.パスキーの認証を実行します。autocomplete="username webauthn"を持つ input 要素に対し、autofill を使い credential のリストを表示します。ユーザーが利用するパスキーをリストより選択し、認証が完了した後、以降の処理に進みます
+- A4.パスキーによるユーザー認証を実行し、A5.実行結果をClientに応答します
+- B3でパスキーによるユーザー認証を実行するため、B2でパスキーautofillを無効化します
+- B3.パスキーによるユーザー認証を実行し、B4.実行結果をClientに応答します
+- バックエンドサーバが11.でパスキーによるユーザ認証の結果を取得し、12.で認証を完了します
+
+### 利用する Transmit Security の API/SDK
+
+| STEP | 役割                                             | API / SDK                                                                                                                                       |
+| ---- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4    | WebAuthn credential(パスキー)の登録    | [webauthn.register](https://developer.transmitsecurity.com/sdk-ref/platform/modules/webauthn/#register)   |
+| 6    | パスキー登録を行ったユーザーの登録                            | [Register for logged-out user](https://developer.transmitsecurity.com/openapi/user/backend-webauthn/#operation/webauthn-registration-external)                                                 |
+| 10   | WebAuthnをサポートするプラットフォームか確認 | [webauthn.isPlatformAuthenticatorSupported](https://developer.transmitsecurity.com/sdk-ref/platform/modules/webauthn/#isplatformauthenticatorsupported) |
+| A1   | パスキー autofillを有効化                      | [webauthn.authenticate.autofill.activate](https://developer.transmitsecurity.com/sdk-ref/platform/interfaces/autofillhandlers/#activate) |
+| B2   | パスキー autofillを無効化                      | [webauthn.authenticate.autofill.abort](https://developer.transmitsecurity.com/sdk-ref/platform/interfaces/autofillhandlers/#abort) |
+| B3   | 入力したユーザ名を使ったパスキー認証              | [webauthn.authenticate.modal](https://developer.transmitsecurity.com/sdk-ref/platform/interfaces/webauthnauthenticationflows/#modal) |
+| 12   | パスキー WebAuthn 認証の実行                      | [Authenticate WebAuthn](https://developer.transmitsecurity.com/openapi/user/backend-webauthn/#operation/authenticateWebauthnCredential) |
+
 ## はじめに
 
 - 本ドキュメントではサンプルアプリケーションの利用に関する手順を示します
-- サンプルアプリケーションを[GitHub の CodeSpace で実行](./setup.md#githubのcodespaceで実行)した際の手順を示しています。試される環境に合わせて適宜アクセスする URL など変更して操作ください
+- サンプルアプリケーションを[ローカル環境で実行](./setup.md#ローカル環境で実行)した際の手順を示しています。試される環境に合わせて適宜アクセスする URL など変更して操作ください
 
 ### 事前準備・前提
 
@@ -132,7 +260,7 @@ cd ~/ciam-expressjs-vanilla-samples/
           <h3>Welcome</h3>
 
           <div>
-            <h4>Passkey Authentication</h4>
+            <h4>パスキーAuthentication</h4>
             <input id="username" placeholder="username" style="width: 100%" />
           </div>
 
@@ -421,7 +549,7 @@ SAMPLE=passkey-authentication-platformsdk yarn start
 
 #### ログイン
 
-- こちらのサンプルアプリケーションでは、パスキーを使った認証を 2 種類提供します。以下の希望する認証方式を試してください。
+- こちらのサンプルアプリケーションでは、2種類のログイン方法を確認できます。以下の希望する認証方式を試してください。
 
   - A. ユーザ名を入力し、Login をクリックし、認証を実行します
 
