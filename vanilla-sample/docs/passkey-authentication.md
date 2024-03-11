@@ -46,8 +46,9 @@ sequenceDiagram
 ### パスキーを使ったログイン
 
 - [パスキーの登録](./passkey-authentication.md#Passkeyの登録)で登録したパスキーを用いてログインします
-- こちらのサンプルアプリケーションでは、2種類のログイン方法を確認できます。該当する操作のフローを確認してください
-  - A. Autofillによるログイン
+- こちらのサンプルアプリケーションでは、`A. Autofillによるログイン` 、 `B. 入力したユーザーのパスキーを使ったログイン`2種類のログイン方法を確認できます。該当する操作のフローを確認してください
+
+- A. Autofillによるログイン
 
 ```mermaid
 sequenceDiagram
@@ -80,7 +81,8 @@ sequenceDiagram
   Backend->>Client: セッション情報(ID Token)があるため/pages/home.htmlへHTTP Redirect
 ```
  
-  - B. 入力したユーザーのパスキーを使ったログイン
+- B. 入力したユーザーのパスキーを使ったログイン
+
 
 ```mermaid
 sequenceDiagram
