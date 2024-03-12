@@ -142,7 +142,6 @@ vim ~/ciam-expressjs-vanilla-samples/hosted-login/pages/login.html
 ```javascript
       async function hostedlogin() {
         // Here we configure the authentication request parameters
-        // See: https://developer.transmitsecurity.com/openapi/user/oidc/#operation/oidcAuthenticate
         const queryParams = new URLSearchParams({
           client_id: window.env.VITE_TS_CLIENT_ID,
           redirect_uri: window.env.VITE_TS_REDIRECT_URI,
@@ -157,8 +156,7 @@ vim ~/ciam-expressjs-vanilla-samples/hosted-login/pages/login.html
           'https://api.userid.security' /*'https://api.transmitsecurity.io'*/
         }/oidc/auth?${queryParams.toString()}`;
 
-        // Request centralized login from the authentication hub
-        // See: https://developer.transmitsecurity.com/guides/user/authentication_hub/#3-request-centralized-login
+        // Request for Hosted Login Page
         window.location.replace(url);
       
       }

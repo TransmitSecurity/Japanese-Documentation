@@ -5,6 +5,10 @@
 - [passkey-authentication](https://github.com/TransmitSecurity/ciam-expressjs-vanilla-samples/tree/main/passkey-authentication)
 - このサンプルアプリケーションはパスキーを利用した認証を確認することができます
 
+> [!NOTE]
+> 本手順は2024/03/12時点でPlatform SDKを利用するためのサンプル手順を示しています
+> 別途、該当するサンプルアプリケーションがリリースされましたらそちらを利用してください
+
 
 ## 処理フロー
 
