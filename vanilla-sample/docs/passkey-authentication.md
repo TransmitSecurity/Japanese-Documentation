@@ -266,7 +266,7 @@ cd ~/ciam-expressjs-vanilla-samples/
           <h3>Welcome</h3>
 
           <div>
-            <h4>パスキーAuthentication</h4>
+            <h4>Passkey Authentication</h4>
             <input id="username" placeholder="username" style="width: 100%" />
           </div>
 
@@ -518,6 +518,7 @@ router.get("/registration", async function (req, res) {
 
   res.redirect("/");
 });
+export const indexRouter = router;
 ```
 
 ## サンプルアプリケーションの実行
