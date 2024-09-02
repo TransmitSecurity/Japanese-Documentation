@@ -123,11 +123,10 @@
 
   <img src="../images/drs-android-studio11.png" width="400"/>
 
-- class MainActivity 以下の変更を行います
-
 - `class MainActivity : ComponentActivity() {`の直前に以下の内容を貼り付けます。以下コメントを参考に値を修正し、貼り付けてください。
 
   - `[CLIENT_ID]`: Transmit Platformでアプリケーションを作成し取得した値を貼り付けてください
+
 
   ```kotlin
   import android.app.Application;
@@ -144,14 +143,14 @@
 
   <img src="../images/drs-android-studio12.png" width="400"/>
 
-- AndroidManifest.xml 以下の変更を行います
+
+- Androidアプリケーションの基本的な挙動をを記述しているファイル`AndroidManifest.xml`の内容を変更します
 
 - `<application` の直後に以下の内容を貼り付けます。
 
   ```kotlin
           android:name=".MainApplication"
   ```
-
 
 - ``参考``: 追記した結果、以下のようになります
 
