@@ -125,17 +125,37 @@
 
 - class MainActivity 以下の変更を行います
 
-- `super.onCerate(...)`の直下、`setContent...`の直前に以下の内容を貼り付けます。以下コメントを参考に値を修正し、貼り付けてください。
+- `class MainActivity : ComponentActivity() {`の直前に以下の内容を貼り付けます。以下コメントを参考に値を修正し、貼り付けてください。
 
   - `[CLIENT_ID]`: Transmit Platformでアプリケーションを作成し取得した値を貼り付けてください
 
   ```kotlin
-  TSAccountProtection.init(this, "https://collect.riskid.security/device/", "[CLIENT_ID]")
+  import android.app.Application;
+
+  class MainApplication: Application() {
+      override fun onCreate() {
+          super.onCreate();
+          TSAccountProtection.init(this, "https://collect.riskid.security/device/", "{CLIENT_ID}");
+      }
+  }
   ```
 
 - ``参考``: 追記した結果、以下のようになります
 
   <img src="../images/drs-android-studio12.png" width="400"/>
+
+- AndroidManifest.xml 以下の変更を行います
+
+- `<application` の直後に以下の内容を貼り付けます。
+
+  ```kotlin
+          android:name=".MainApplication"
+  ```
+
+
+- ``参考``: 追記した結果、以下のようになります
+
+  <img src="../images/drs-android-studio12-2.png" width="400"/>
 
 - `fun Greeting(...)`の内容を変更します。`@Composable`直下に以下の内容を貼り付けます。以下コメントを参考に値を修正し、貼り付けてください。
   - `[USER_ID]`: 記録するセッションのUserIDを指定します。今回は動作確認が目的のため固定の文字列`test01`を指定します
@@ -236,20 +256,22 @@
   1. `register`
   1. `transaction`
 
-  <img src="../images/drs-android-portal01.png" width="400"/>
+  <p><img src="../images/drs-android-portal01.png" width="400"/></p>
+
+  <p><img src="../images/drs-android-portal02.png" width="400"/></p>
 
 - Unset User
   1. `Unset User`
   1. `register`
   1. `transaction`
 
-  <img src="../images/drs-android-portal02.png" width="400"/>
+  <p><img src="../images/drs-android-portal03.png" width="400"/></p>
 
 - `Set User`の`register`について詳細を確認します
 
-  <p><img src="../images/drs-android-portal03.png" width="400"/></p>
-
   <p><img src="../images/drs-android-portal04.png" width="400"/></p>
+
+  <p><img src="../images/drs-android-portal05.png" width="400"/></p>
 
 - JSON右上のボタンをクリックすることにより、JSONの内容をコピーすることが可能です
 
